@@ -15,6 +15,11 @@ import { useNavigate } from 'react-router-dom';
 import Fetch from '../services/Fetch';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
+import InboxIcon from '@mui/icons-material/Inbox';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import StarBorder from '@mui/icons-material/StarBorder';
+import { Collapse } from '@mui/material';
 
 
 export default function SwipeableTemporaryDrawer() {
@@ -28,6 +33,11 @@ export default function SwipeableTemporaryDrawer() {
                navigate('/login');
           }
      }
+
+     const [openCourses, setOpenCourses] = React.useState(false);
+     const handleCoursesClick = () => {
+          setOpenCourses(!openCourses);
+     };
 
      const items1 = [
           {
@@ -65,10 +75,10 @@ export default function SwipeableTemporaryDrawer() {
      };
 
      const list = (anchor) => (
-          <Box 
+          <Box
                sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
                role="presentation"
-               onClick={toggleDrawer(anchor, false)}
+               // onClick={toggleDrawer(anchor, false)}
                onKeyDown={toggleDrawer(anchor, false)}
           >
                <List>
@@ -110,6 +120,26 @@ export default function SwipeableTemporaryDrawer() {
                               <ListItemText primary="Logout" />
                          </ListItemButton>
                     </ListItem>
+                    <ListItemButton onClick={handleCoursesClick}>
+                         <ListItemIcon>
+                              <InboxIcon />
+                         </ListItemIcon>
+                         <ListItemText primary="Courses" />
+                         {openCourses ? <ExpandLess /> : <ExpandMore />}
+                    </ListItemButton>
+                    {/* القائمة الفرعية */}
+                    <Collapse in={openCourses} timeout="auto" unmountOnExit>
+                         <List component="div" disablePadding>
+
+                              <ListItemButton onClick={() => navigate('/create-course')} sx={{ pl: 4 }}>
+                                   <ListItemIcon>
+                                        <StarBorder />
+                                   </ListItemIcon>
+                                   <ListItemText primary="Create Course" />
+                              </ListItemButton>
+
+                         </List>
+                    </Collapse>
                </List>
           </Box>
      );
