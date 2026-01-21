@@ -1,4 +1,4 @@
-import { CircularProgress, TextField } from "@mui/material";
+import { Box, CircularProgress, TextField, Typography } from "@mui/material";
 import MiniDrawer from "../../components/Drawer";
 import { useContext, useState } from "react";
 import Image1 from '../../images/forgot_password/image1.png';
@@ -7,6 +7,7 @@ import AuthContext from "../../context/AuthContext";
 import SnackbarAlert from "../../components/SnackBar";
 import Fetch from "../../services/Fetch";
 import { useNavigate } from "react-router-dom";
+import Header from "../../components/Header";
 
 function UpdatePassword() {
      const host = `${process.env.REACT_APP_LOCAL_HOST}`;
@@ -48,18 +49,19 @@ function UpdatePassword() {
           <>
                {
                     wait ?
-                         <div className="w-full h-screen relative flex justify-center items-center">
+                         <Box className="w-full h-screen relative flex justify-center items-center">
                               <CircularProgress size={70} />
-                         </div>
+                         </Box>
                          :
-                         <section className="bg-blue-color w-screen h-screen overflow-hidden">
-                              <MiniDrawer />
+                         <Box className="bg-blue-color w-screen h-screen overflow-hidden">
+                              {/* <MiniDrawer /> */}
+                              <Header />
 
-                              <div className="bg-white h-screen w-1/2 float-right max-sm:w-11/12" style={{ borderRadius: "70px 0 0 70px" }}>
-                                   <h1 className="text-center font-bold text-2xl mt-32">
+                              <Box className="bg-white h-screen w-1/2 float-right max-sm:w-11/12" style={{ borderRadius: "70px 0 0 70px" }}>
+                                   <Typography marginTop={5} variant="h5" className="text-center font-bold text-2xl mt-32">
                                         Change your password
-                                   </h1>
-                                   <div className="flex flex-col items-center h-1/2 mt-10">
+                                   </Typography>
+                                   <Box className="flex flex-col items-center h-1/2 mt-10">
                                         <TextField onChange={(e) => setPassword(e.target.value)} type="password" id="standard-basic" className="w-2/3" label="Password" variant="standard" slotProps={{ htmlInput: { 'className': 'py-5' } }} />
                                         <br />
                                         <TextField onChange={(e) => setNewPassword(e.target.value)} type="password" id="standard-basic" className="w-2/3" label="New Password" variant="standard" />
@@ -74,13 +76,13 @@ function UpdatePassword() {
                                              }
 
                                         </button>
-                                   </div>
-                              </div>
-                              <div className="w-1/2 h-screen float-left relative">
+                                   </Box>
+                              </Box>
+                              <Box className="w-1/2 h-screen float-left relative">
                                    <img src={Image2} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-sm:hidden" />
                                    <img src={Image1} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-sm:hidden" />
-                              </div>
-                         </section>
+                              </Box>
+                         </Box>
 
                }
                <SnackbarAlert open={open} message={message} severity={type} onClose={() => setOpen(false)} />

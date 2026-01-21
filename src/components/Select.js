@@ -25,7 +25,7 @@ export default function BasicSelect({names=[], values=[], title, selected=null, 
         >
           {
                names.map((name, index) => 
-                    <MenuItem class value={values[index]}>{name}</MenuItem>
+                    <MenuItem value={values[index]}>{name}</MenuItem>
                )
           }
         </Select>

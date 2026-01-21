@@ -6,31 +6,51 @@ import AccountRoutes from './routes/AccountRoutes';
 import AuthProvider from './providers/AuthProvider';
 import NotAuthProvider from './providers/NotAuthProvider';
 import CourseRoutes from './routes/CourseRoutes';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+
+// const darkTheme = createTheme({
+//   palette: {
+//     mode: 'dark',
+//   },
+// });
+
+// const lightTheme = createTheme({
+//   palette: {
+//     mode: 'light',
+//   },
+// });
 
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-          <Routes>
-            <Route path='/' element={<Navigate to='/login' />} />
-            {
-              AuthRoutes().map((route, index) =>
-                <Route key={index} path={route.path} element={<NotAuthProvider>{route.element}</NotAuthProvider>} />
-              )
-            }
-            {
-              AccountRoutes().map((route, index) => 
-                <Route key={index} path={route.path} element={<AuthProvider role="teacher">{route.element}</AuthProvider>} />
-              )
-            }
-            {
-              CourseRoutes().map((route, index) =>
-                <Route key={index} path={route.path} element={<AuthProvider role="teacher">{route.element}</AuthProvider>} />
-              )
-            }
-          </Routes>
-      </BrowserRouter>
-    </div>
+    // <ThemeProvider theme={lightTheme}>
+    //   <CssBaseline />
+      <main>
+      <div className="App">
+        <BrowserRouter>
+            <Routes>
+              <Route path='/' element={<Navigate to='/login' />} />
+              {
+                AuthRoutes().map((route, index) =>
+                  <Route key={index} path={route.path} element={<NotAuthProvider>{route.element}</NotAuthProvider>} />
+                )
+              }
+              {
+                AccountRoutes().map((route, index) => 
+                  <Route key={index} path={route.path} element={<AuthProvider role="teacher">{route.element}</AuthProvider>} />
+                )
+              }
+              {
+                CourseRoutes().map((route, index) =>
+                  <Route key={index} path={route.path} element={<AuthProvider role="teacher">{route.element}</AuthProvider>} />
+                )
+              }
+            </Routes>
+        </BrowserRouter>
+      </div>
+
+      </main>
+    // </ThemeProvider>
   );
 }
 

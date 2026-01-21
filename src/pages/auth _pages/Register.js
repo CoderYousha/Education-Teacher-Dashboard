@@ -1,4 +1,4 @@
-import { CircularProgress, TextField } from "@mui/material";
+import { Box, CircularProgress, TextField, Typography } from "@mui/material";
 import Image1 from '../../images/login/image1.png';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
@@ -78,33 +78,33 @@ function Register() {
           <>
                {
                     wait ?
-                         <div className="w-full h-screen relative flex justify-center items-center">
+                         <Box className="w-full h-screen relative flex justify-center items-center">
                               <CircularProgress size={70} />
-                         </div>
+                         </Box>
                          :
-                         <section className="bg-blue-color w-screen h-screen overflow-auto">
-                              <div className="bg-white h-screen w-1/2 float-right px-5 max-sm:w-11/12" style={{ borderRadius: "70px 0 0 70px" }}>
-                                   <h1 className="text-center font-bold text-2xl mt-32">Sign Up</h1>
-                                   <div className="flex justify-between mx-auto mt-10">
+                         <Box className="bg-blue-color w-screen h-screen overflow-auto">
+                              <Box className="bg-white h-screen w-1/2 float-right px-5 max-sm:w-11/12" style={{ borderRadius: "70px 0 0 70px" }}>
+                                   <Typography marginTop={10} variant="h5" className="text-center font-bold text-2xl mt-32">Sign Up</Typography>
+                                   <Box className="flex justify-between mx-auto mt-10">
                                         <TextField onChange={(e) => setFirstName(e.target.value)} className="w-2/5" id="standard-basic" label="First Name" variant="standard" slotProps={{ htmlInput: { 'className': 'py-5' } }} />
                                         <TextField onChange={(e) => setLastName(e.target.value)} className="w-2/5" id="standard-basic" label="Last Name" variant="standard" />
-                                   </div>
-                                   <div className="flex justify-between mx-auto mt-10 items-center">
+                                   </Box>
+                                   <Box className="flex justify-between mx-auto mt-10 items-center">
                                         <PhoneInput country={'us'} containerStyle={{ width: "40%" }} inputStyle={{ width: '100%' }} onChange={handleChange} />
                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                              <DatePicker onChange={(e) => setBirthDate(dayjs(e).format("YYYY-MM-DD"))} className="w-2/5"
                                                   label="Birth Date"
                                              />
                                         </LocalizationProvider>
-                                   </div>
-                                   <div className="flex justify-between mx-auto mt-10">
+                                   </Box>
+                                   <Box className="flex justify-between mx-auto mt-10">
                                         <TextField onChange={(e) => setEmail(e.target.value)} className="w-2/5" id="standard-basic" label="Email" variant="standard" slotProps={{ htmlInput: { 'className': 'py-5' } }} />
                                         <TextField onChange={(e) => setPassword(e.target.value)} type="password" className="w-2/5" id="standard-basic" label="Password" variant="standard" />
-                                   </div>
-                                   <div className="flex justify-between mx-auto mt-10">
+                                   </Box>
+                                   <Box className="flex justify-between mx-auto mt-10">
                                         <TextField onChange={(e) => setPasswordConfirmation(e.target.value)} type="password" className="w-2/5" id="standard-basic" label="Password Confirmation" variant="standard" slotProps={{ htmlInput: { 'className': 'py-5' } }} />
-                                   </div>
-                                   <div className="flex justify-between mx-auto mt-3">
+                                   </Box>
+                                   <Box className="flex justify-between mx-auto mt-3">
                                         <button onClick={register} className="bg-blue-color text-white w-2/3 mt-10 py-1 rounded-lg font-semibold mx-auto">
                                              {
                                                   sendWait ?
@@ -113,16 +113,16 @@ function Register() {
                                                        "Register"
                                              }
                                         </button>
-                                   </div>
-                                   <div className=" flex justify-between w-2/3 blue-color cursor-pointer mt-10">
-                                        <div onClick={() => navigate('/login')} className="ml-5">I have an account</div>
-                                   </div>
-                              </div>
-                              <div className="w-1/2 h-screen float-left relative">
+                                   </Box>
+                                   <Box className=" flex justify-between w-2/3 blue-color cursor-pointer mt-10">
+                                        <Box onClick={() => navigate('/login')} className="ml-5">I have an account</Box>
+                                   </Box>
+                              </Box>
+                              <Box className="w-1/2 h-screen float-left relative">
                                    <img src={Image1} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-sm:hidden" />
-                              </div>
+                              </Box>
                               <SnackbarAlert open={open} message={message} severity={type} onClose={() => setOpen(false)} />
-                         </section>
+                         </Box>
 
                }
           </>

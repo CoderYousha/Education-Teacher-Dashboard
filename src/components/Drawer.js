@@ -18,8 +18,9 @@ import { faLock } from '@fortawesome/free-solid-svg-icons';
 import InboxIcon from '@mui/icons-material/Inbox';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import StarBorder from '@mui/icons-material/StarBorder';
+import PlayLessonIcon from '@mui/icons-material/PlayLesson';
 import { Collapse } from '@mui/material';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 
 
 export default function SwipeableTemporaryDrawer() {
@@ -49,6 +50,18 @@ export default function SwipeableTemporaryDrawer() {
                "text": "Change Password",
                "icon": <FontAwesomeIcon icon={faLock} />,
                "path": "/update-password"
+          },
+     ];
+     const items2 = [
+          {
+               "text": "My Courses",
+               "icon": <PlayLessonIcon />,
+               "path": "/my-courses"
+          },
+          {
+               "text": "Create Course",
+               "icon": <AddBoxIcon />,
+               "path": "/create-course"
           },
      ];
 
@@ -96,21 +109,6 @@ export default function SwipeableTemporaryDrawer() {
                     }
                </List>
                <Divider />
-               {/* <List>
-                    {
-                         items.map((item) =>
-                              <ListItem disablePadding>
-                                   <ListItemButton>
-                                        <ListItemIcon>
-                                             {item.icon}
-                                        </ListItemIcon>
-                                        <ListItemText primary={item.text} />
-                                   </ListItemButton>
-                              </ListItem>
-
-                         )
-                    }
-               </List> */}
                <List>
                     <ListItem disablePadding>
                          <ListItemButton onClick={logout}>
@@ -130,13 +128,16 @@ export default function SwipeableTemporaryDrawer() {
                     {/* القائمة الفرعية */}
                     <Collapse in={openCourses} timeout="auto" unmountOnExit>
                          <List component="div" disablePadding>
-
-                              <ListItemButton onClick={() => navigate('/create-course')} sx={{ pl: 4 }}>
-                                   <ListItemIcon>
-                                        <StarBorder />
-                                   </ListItemIcon>
-                                   <ListItemText primary="Create Course" />
-                              </ListItemButton>
+                              {
+                                   items2.map((item, index) =>
+                                        <ListItemButton key={index} onClick={() => navigate(item.path)} sx={{ pl: 4 }}>
+                                             <ListItemIcon>
+                                                  {item.icon}
+                                             </ListItemIcon>
+                                             <ListItemText primary={item.text} />
+                                        </ListItemButton>
+                                   )
+                              }
 
                          </List>
                     </Collapse>
@@ -147,7 +148,7 @@ export default function SwipeableTemporaryDrawer() {
      return (
           <div>
                <React.Fragment>
-                    <Button onClick={toggleDrawer("left", true)} color='white'><MenuIcon sx={{ color: "white" }} /></Button>
+                    <Button onClick={toggleDrawer("left", true)} color='white'><MenuIcon sx={{ color: "white"}} /></Button>
                     <SwipeableDrawer
                          anchor={"left"}
                          open={state["left"]}

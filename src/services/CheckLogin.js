@@ -1,5 +1,6 @@
-async function CheckLogin(host) {
+import { useNavigate } from "react-router-dom";
 
+async function CheckLogin(host) {
      let result = await fetch(host + '/account/get-profile', {
           method: "GET",
           headers: {
@@ -13,6 +14,7 @@ async function CheckLogin(host) {
      } else {
           return false;
      }
+
 }
 
 export default CheckLogin;

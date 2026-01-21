@@ -19,22 +19,9 @@ const MenuProps = {
   },
 };
 
-// const names = [
-//   'Oliver Hansen',
-//   'Van Henry',
-//   'April Tucker',
-//   'Ralph Hubbard',
-//   'Omar Alexander',
-//   'Carlos Abbott',
-//   'Miriam Wagner',
-//   'Bradley Wilkerson',
-//   'Virginia Andrews',
-//   'Kelly Snyder',
-// ];
-
-function getStyles(name, personName, theme) {
+function getStyles(name, itemName, theme) {
   return {
-    fontWeight: personName.includes(name)
+    fontWeight: itemName.includes(name)
       ? theme.typography.fontWeightMedium
       : theme.typography.fontWeightRegular,
   };
@@ -42,14 +29,13 @@ function getStyles(name, personName, theme) {
 
 export default function MultipleSelectChip({names=null, data=null, onChange, title, selected}) {
   const theme = useTheme();
-  const [personName, setPersonName] = React.useState([]);
-  const [personId, setPersonId] = React.useState(selected);
+  const [itemName, setItemName] = React.useState([]);
 
   const handleChange = (event, id) => {
     const {
       target: { value },
     } = event;
-    setPersonName(
+    setItemName(
       // On autofill we get a stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
@@ -63,7 +49,7 @@ export default function MultipleSelectChip({names=null, data=null, onChange, tit
           labelId="demo-multiple-chip-label"
           id="demo-multiple-chip"
           multiple
-          value={selected? selected: personName}
+          value={selected? selected: itemName}
           onChange={(e)=>{handleChange(e); onChange(e.target.value)}}
           input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
           renderValue={(selected) => (
@@ -82,7 +68,7 @@ export default function MultipleSelectChip({names=null, data=null, onChange, tit
             <MenuItem
               key={name}
               value={name}
-              style={getStyles(name, personName, theme)}
+              style={getStyles(name, itemName, theme)}
             >
               {name}
             </MenuItem>
@@ -92,7 +78,7 @@ export default function MultipleSelectChip({names=null, data=null, onChange, tit
             <MenuItem
               key={item.id}
               value={item.id}
-              style={getStyles(item.id, personName, theme)}
+              style={getStyles(item.id, itemName, theme)}
             >
               {localStorage.getItem('language') == 'en' ? item.name_en : item.name_ar}
             </MenuItem>
