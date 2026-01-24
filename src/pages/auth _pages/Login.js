@@ -5,30 +5,27 @@ import { useNavigate } from "react-router-dom";
 import Fetch from "../../services/Fetch";
 import SnackbarAlert from "../../components/SnackBar";
 import AuthContext from "../../context/AuthContext";
+import useSnackBar from "../../hooks/UseSnackBar";
+import { useWaits } from "../../hooks/UseWait";
+import { buildLoginFormData } from "../../helper/LoginFormData";
 
 
 function Login() {
      const host = `${process.env.REACT_APP_LOCAL_HOST}`;
-     const navigate = useNavigate();
-     const [message, setMessage] = useState('');
-     const [type, setType] = useState('');
+     const { wait } = useContext(AuthContext);
+     const { openSnackBar, type, message, setSnackBar, setOpenSnackBar } = useSnackBar();
+     const { sendWait, setSendWait } = useWaits();
      const [email, setEmail] = useState('');
      const [password, setPassword] = useState('');
-     const [sendWait, setSendWait] = useState(false);
-     const [open, setOpen] = useState(false);
-     const {wait} = useContext(AuthContext);
-
-     function setSnackBar(type, message){
-          setOpen(true);
-          setType(type);
-          setMessage(message);
-     }
+     const navigate = useNavigate();
 
      const login = async () => {
           setSendWait(true);
-          const formData = new FormData();
-          formData.append('email', email);
-          formData.append('password', password);
+
+          const formData = buildLoginFormData({
+               email: email,
+               password: password
+          });
           let result = await Fetch(host + '/login', "POST", formData);
 
           if (result.status == 200) {
@@ -36,9 +33,9 @@ function Login() {
                localStorage.setItem('language', result.data.data.user.language);
                localStorage.setItem('id', result.data.data.user.id);
                navigate('/profile');
-          }else if(result.status == 422){
+          } else if (result.status == 422) {
                setSnackBar("error", result.data.errors[0]);
-          }else if(result.status == 400){
+          } else if (result.status == 400) {
                setSnackBar("error", result.data.errors[0]);
           }
           setSendWait(false);
@@ -53,7 +50,7 @@ function Login() {
                          </Box>
                          :
                          <Box className="bg-blue-color w-screen h-screen overflow-auto">
-                              <Box sx={{bgcolor: 'background.paper'}} className="h-screen w-1/2 float-right max-sm:w-11/12" style={{ borderRadius: "70px 0 0 70px" }}>
+                              <Box sx={{ bgcolor: 'background.paper' }} className="h-screen w-1/2 float-right max-sm:w-11/12" style={{ borderRadius: "70px 0 0 70px" }}>
                                    <Typography marginTop={10} variant="h5" className="text-center font-bold text-2xl mt-32">
                                         Sign In
                                    </Typography>
@@ -80,7 +77,7 @@ function Login() {
                               </Box>
                          </Box>
                }
-               <SnackbarAlert open={open} message={message} severity={type} onClose={() => setOpen(false)}
+               <SnackbarAlert open={openSnackBar} message={message} severity={type} onClose={() => setOpenSnackBar(false)}
                />
           </>
      );

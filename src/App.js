@@ -8,6 +8,9 @@ import NotAuthProvider from './providers/NotAuthProvider';
 import CourseRoutes from './routes/CourseRoutes';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import ExamRoutes from './routes/ExamRoutes';
+import QuestionRoutes from './routes/QuestionRoutes';
+import OptionRoutes from './routes/OptionRoutes';
 
 // const darkTheme = createTheme({
 //   palette: {
@@ -42,6 +45,21 @@ function App() {
               }
               {
                 CourseRoutes().map((route, index) =>
+                  <Route key={index} path={route.path} element={<AuthProvider role="teacher">{route.element}</AuthProvider>} />
+                )
+              }
+              {
+                ExamRoutes().map((route, index) => 
+                  <Route key={index} path={route.path} element={<AuthProvider role="teacher">{route.element}</AuthProvider>} />
+                )
+              }
+              {
+                QuestionRoutes().map((route, index) =>
+                  <Route key={index} path={route.path} element={<AuthProvider role="teacher">{route.element}</AuthProvider>} />
+                )
+              }
+              {
+                OptionRoutes().map((route, index) =>
                   <Route key={index} path={route.path} element={<AuthProvider role="teacher">{route.element}</AuthProvider>} />
                 )
               }

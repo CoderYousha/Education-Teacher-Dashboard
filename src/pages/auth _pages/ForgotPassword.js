@@ -6,21 +6,15 @@ import { useContext, useState } from "react";
 import AuthContext from "../../context/AuthContext";
 import Fetch from "../../services/Fetch";
 import SnackbarAlert from "../../components/SnackBar";
+import useSnackBar from "../../hooks/UseSnackBar";
+import { useWaits } from "../../hooks/UseWait";
 
 function ForgotPassword() {
      const host = `${process.env.REACT_APP_LOCAL_HOST}`;
-     const [sendWait, setSendWait] = useState(false);
      const { wait } = useContext(AuthContext);
-     const [message, setMessage] = useState('');
-     const [type, setType] = useState('');
-     const [open, setOpen] = useState(false);
+     const { openSnackBar, type, message, setSnackBar, setOpenSnackBar } = useSnackBar();
+     const {sendWait, setSendWait} = useWaits();
      const [email, setEmail] = useState('');
-
-     function setSnackBar(type, message){
-          setOpen(true);
-          setType(type);
-          setMessage(message);
-     }
 
      const forgotPassword = async () => {
           setSendWait(true);
@@ -34,7 +28,7 @@ function ForgotPassword() {
           if (result.status == 200) {
                document.getElementById('page1').style.display = 'none';
                document.getElementById('page2').style.display = 'flex';
-          }else if(result.status == 422){
+          } else if (result.status == 422) {
                setSnackBar("error", result.status.errors[0]);
           }
 
@@ -92,7 +86,7 @@ function ForgotPassword() {
                               </Box>
                          </Box>
                }
-               <SnackbarAlert open={open} message={message} severity={type} onClose={() => setOpen(false)} />
+               <SnackbarAlert open={openSnackBar} message={message} severity={type} onClose={() => setOpenSnackBar(false)} />
           </>
      );
 }

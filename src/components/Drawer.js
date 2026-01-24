@@ -31,6 +31,8 @@ export default function SwipeableTemporaryDrawer() {
           let result = await Fetch(host + '/logout', 'POST', null);
 
           if (result.status == 200) {
+               localStorage.removeItem('token');
+               localStorage.removeItem('language');
                navigate('/login');
           }
      }

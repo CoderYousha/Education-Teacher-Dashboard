@@ -26,7 +26,7 @@ function CoursesHeader({data, onChange, selected, onClick}) {
           }
      };
      return (
-          <Container maxWidth="xl" className="fixed top-0 right-5 w-full bg-blue-color z-10 pl-10">
+          <Box className="fixed top-0 w-full bg-blue-color z-10 pl-10">
                <Box className='flex justify-between items-center w-full float-right'>
                     <SwipeableTemporaryDrawer />
                     <Box className="w-fit h-16 flex items-center">
@@ -59,7 +59,7 @@ function CoursesHeader({data, onChange, selected, onClick}) {
                          <ArrowForwardIosIcon />
                     </button>
                </Box>
-          </Container>
+          </Box>
      );
 }
 

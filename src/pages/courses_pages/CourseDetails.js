@@ -1,28 +1,36 @@
 import { BottomNavigation, BottomNavigationAction, Box, Button, Card, CardActions, CardContent, CircularProgress, SpeedDial, SpeedDialAction, SpeedDialIcon, Typography } from "@mui/material";
 import Header from "../../components/Header";
-import Image1 from '../../images/tests/image1.png';
 import { useContext, useEffect, useState } from "react";
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import Fetch from "../../services/Fetch";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
 import ReactPlayer from "react-player";
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import QueuePlayNextIcon from '@mui/icons-material/QueuePlayNext';
+import AlertDialog from "../../components/DialogView";
+import SnackbarAlert from "../../components/SnackBar";
+import { useDialog } from "../../hooks/UseDialog";
+import useSnackBar from "../../hooks/UseSnackBar";
+import { useWaits } from "../../hooks/UseWait";
 
 
 function CourseDetails() {
      const host = `${process.env.REACT_APP_LOCAL_HOST}`;
-     const [value, setValue] = useState(0);
-     const [course, setCourse] = useState('');
-     const param = useParams();
-     const { wait } = useContext(AuthContext);
-     const [getWait, setGetWait] = useState(true);
      const language = localStorage.getItem('language');
+     const { wait } = useContext(AuthContext);
+     const { open, title, description, setDialog, setOpen } = useDialog();
+     const { openSnackBar, type, message, setSnackBar, setOpenSnackBar } = useSnackBar();
+     const {getWait, setGetWait, sendWait, setSendWait} = useWaits();
+     const [value, setValue] = useState(parseInt(sessionStorage.getItem('content-window'), 10));
+     const [course, setCourse] = useState('');
+     const [examId, setExamId] = useState('');
+     const navigate = useNavigate();
+     const param = useParams();
 
      const actions = [
-          { icon: <AddTaskIcon />, name: 'Add Exam' },
+          { icon: <AddTaskIcon />, name: 'Add Exam', path: `/${param.id}/create-exam` },
           { icon: <QueuePlayNextIcon />, name: 'Add Course' },
      ];
 
@@ -35,9 +43,27 @@ function CourseDetails() {
           }
      }
 
+     const deleteExam = async () => {
+          setSendWait(true);
+
+          let result = await Fetch(host + `/teacher/courses/exams/${examId}/delete`, 'DELETE', null);
+
+          if (result.status == 200) {
+               setCourse(prevCourse => ({
+                    ...prevCourse,
+                    contents: prevCourse.contents.filter((item) => item.content.id !== examId)
+               }));
+               setOpen(false);
+               setSnackBar('success', 'Deleted Successfully');
+               setExamId(null);
+          }
+
+          setSendWait(false);
+     }
+
      useEffect(() => {
           getCourse();
-     }, []);
+     }, [course]);
 
      return (
           <>
@@ -58,6 +84,7 @@ function CourseDetails() {
                                         value={value}
                                         onChange={(event, newValue) => {
                                              setValue(newValue);
+                                             sessionStorage.setItem('content-window', newValue);
                                         }}
                                    >
                                         <BottomNavigationAction label="Videos" icon={<OndemandVideoIcon />} />
@@ -68,7 +95,7 @@ function CourseDetails() {
                                    value == 0 &&
                                    course.contents.map((content, index) =>
                                         content.content_type == "CourseFile" &&
-                                        <Box className="w-1/2 h-fit mx-auto mt-12">
+                                        <Box key={index} className="w-1/2 h-fit mx-auto mt-12">
                                              <ReactPlayer src="http://72.60.32.52:84/storage/files/courses/2/syntax.mp4" controls={true}
                                                   width="100%"
                                                   height="100%" />
@@ -78,11 +105,11 @@ function CourseDetails() {
                               }
                               {
                                    value == 1 &&
-                                   <Box className="grid grid-cols-3 gap-x-2 justify-items-center">
+                                   <Box className="mt-12 grid grid-cols-4 gap-x-2 gap-y-2 justify-items-center max-sm:grid-cols-1">
                                         {
                                              course.contents.map((content, index) =>
                                                   content.content_type == "Exam" &&
-                                                  <Card sx={{ minWidth: 275 }}>
+                                                  <Card key={index} sx={{ minWidth: 275 }}>
                                                        <CardContent>
                                                             <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
                                                                  Exam
@@ -96,7 +123,9 @@ function CourseDetails() {
                                                             </Typography>
                                                        </CardContent>
                                                        <CardActions>
-                                                            <Button size="small">Learn More</Button>
+                                                            <Button size="small" onClick={() => navigate(`/courses/${course.id}/exams/${content.content.id}/questions`)}>Questions</Button>
+                                                            <Button size="small" onClick={() => navigate(`/course/${param.id}/update-exam/${content.content.id}`)}>Update</Button>
+                                                            <Button size="small" color="error" onClick={() => { setExamId(content.content.id); setDialog('Delete Exam', 'Are you sure that you want to delete this exam?', deleteExam) }}>Delete</Button>
                                                        </CardActions>
                                                   </Card>
 
@@ -111,6 +140,7 @@ function CourseDetails() {
                               >
                                    {actions.map((action) => (
                                         <SpeedDialAction
+                                             onClick={() => navigate(action.path)}
                                              key={action.name}
                                              icon={action.icon}
                                              slotProps={{
@@ -121,8 +151,10 @@ function CourseDetails() {
                                         />
                                    ))}
                               </SpeedDial>
+                              <AlertDialog title={title} description={description} onCancel={() => setOpen(false)} onConfirm={() => { value == 1 ? deleteExam() : deleteExam(); }} wait={sendWait} openDialog={open} />
                          </Box>
                }
+               <SnackbarAlert open={openSnackBar} message={message} severity={type} onClose={() => setOpenSnackBar(false)} />
           </>
      );
 }

@@ -1,44 +1,28 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import CoursesHeader from "../../components/CoursesHeader";
-import Image1 from "../../images/tests/image1.png";
 import AuthContext from "../../context/AuthContext";
-import { Box, Button, Card, CardActions, CardContent, CardMedia, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Typography } from "@mui/material";
+import { Box, Button, Card, CardActions, CardContent, CardMedia, CircularProgress, Typography } from "@mui/material";
 import Fetch from "../../services/Fetch";
 import { useNavigate } from "react-router-dom";
 import AlertDialog from "../../components/DialogView";
 import SnackbarAlert from "../../components/SnackBar";
+import { useDialog } from "../../hooks/UseDialog";
+import useSnackBar from "../../hooks/UseSnackBar";
+import { useWaits } from "../../hooks/UseWait";
 
 function Courses() {
      const host = `${process.env.REACT_APP_LOCAL_HOST}`;
-     const [getWait, setGetWait] = useState(true);
+     const language = localStorage.getItem('language');
      const { wait } = useContext(AuthContext);
+     const {open, title, description, setDialog, setOpen} = useDialog();
+     const {openSnackBar, type, message, setSnackBar, setOpenSnackBar} = useSnackBar();
+     const {getWait, setGetWait, searchWait, setSearchWait, sendWait, setSendWait} = useWaits();
      const [courses, setCourses] = useState([]);
      const [categories, setCategories] = useState([]);
-     const language = localStorage.getItem('language');
      const [categoryId, setCategoryId] = useState('');
-     const [searchWait, setSearchWait] = useState(false);
      const [search, setSearch] = useState('');
      const [courseId, setCourseId] = useState('');
      const navigate = useNavigate();
-     const [open, setOpen] = useState(false);
-     const [title, setTitle] = useState('');
-     const [description, setDescription] = useState('');
-     const [sendWait, setSendWait] = useState(false);
-     const [message, setMessage] = useState('');
-     const [type, setType] = useState('');
-     const [openSnackBar, setOpenSnackBar] = useState(false);
-
-     function setDialog(title, description) {
-          setTitle(title);
-          setDescription(description);
-          setOpen(true);
-     }
-
-     function setSnackBar(type, message) {
-          setOpenSnackBar(true);
-          setType(type);
-          setMessage(message);
-     }
 
      const getCategories = async () => {
           let result = await Fetch(host + '/categories', "GET", null);
@@ -53,9 +37,9 @@ function Courses() {
 
           let result;
           if (!categoryId) {
-               result = await Fetch(host + `/courses?for_user=${localStorage.getItem('id')}&search=${search}`);
+               result = await Fetch(host + `/courses?teacher_id=${localStorage.getItem('id')}&search=${search}`);
           } else {
-               result = await Fetch(host + `/courses?for_user=${localStorage.getItem('id')}&category_id=${categoryId}&search=${search}`);
+               result = await Fetch(host + `/courses?teacher_id=${localStorage.getItem('id')}&category_id=${categoryId}&search=${search}`);
           }
 
           if (result.status == 200) {

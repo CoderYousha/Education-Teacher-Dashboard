@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Container, TextField, Typography } from "@mui/material";
+import { Box, CircularProgress, TextField, Typography } from "@mui/material";
 import Image1 from '../../images/profile/books.png';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
@@ -6,7 +6,6 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import MiniDrawer from "../../components/Drawer";
-import SwipeableTemporaryDrawer from "../../components/Drawer";
 import BasicSelect from "../../components/Select";
 import { useContext, useEffect, useRef, useState } from "react";
 import AuthContext from "../../context/AuthContext";
@@ -14,15 +13,15 @@ import Fetch from "../../services/Fetch";
 import dayjs from "dayjs";
 import SnackbarAlert from "../../components/SnackBar";
 import Header from "../../components/Header";
+import useSnackBar from "../../hooks/UseSnackBar";
+import { useWaits } from "../../hooks/UseWait";
+import { buildProfileFormData } from "../../helper/ProfileFormData";
 
 function Profile() {
      const host = `${process.env.REACT_APP_LOCAL_HOST}`;
-     const [sendWait, setSendWait] = useState(false);
-     const [getWait, setGetWait] = useState(false);
      const { wait } = useContext(AuthContext);
-     const [message, setMessage] = useState('');
-     const [type, setType] = useState('');
-     const [open, setOpen] = useState(false);
+     const { openSnackBar, type, message, setSnackBar, setOpenSnackBar } = useSnackBar();
+     const {sendWait, setSendWait, getWait, setGetWait} = useWaits();
      const [profile, setProfile] = useState('');
      const [birthDate, setBirthDate] = useState('');
      const [phoneCode, setPhoneCode] = useState('');
@@ -32,18 +31,12 @@ function Profile() {
      const lastNameRef = useRef();
      const emailRef = useRef();
 
-     function setSnackBar(type, message){
-          setOpen(true);
-          setType(type);
-          setMessage(message);
-     }
-
      const handleChange = (value, country, e, formattedValue) => {
           console.log("Full value:", value);
           console.log("Formatted:", formattedValue);
           console.log("Country object:", country);
           console.log("Dial code:", country.dialCode);
-          
+
           const numberWithoutCode = value.replace(country.dialCode, "");
           console.log("Number without code:", numberWithoutCode);
 
@@ -66,20 +59,22 @@ function Profile() {
 
      const updateProfile = async () => {
           setSendWait(true);
-          
-          const formData = new FormData();
-          formData.append('first_name', firstNameRef.current.value);
-          formData.append('last_name', lastNameRef.current.value);
-          formData.append('email', emailRef.current.value);
-          formData.append('phone_code', phoneCode);
-          formData.append('phone', phoneNumber);
-          formData.append('birth_date', birthDate);
-          formData.append('language', language);
+
+          const formData = buildProfileFormData({
+               firstName: firstNameRef.current.value,
+               lastName: lastNameRef.current.value,
+               email: emailRef.current.value,
+               phoneCode: phoneCode,
+               phoneNumber: phoneNumber,
+               birthDate: birthDate,
+               language: language,
+          });
 
           let result = await Fetch(host + '/account/update-profile', 'POST', formData);
-          if(result.status == 200){
+          if (result.status == 200) {
                setSnackBar('success', 'Updated Successfully');
-          }else if(result.status == 422){
+               localStorage.setItem('language', language);
+          } else if (result.status == 422) {
                setSnackBar('error', result.data.errors[0]);
           }
 
@@ -99,7 +94,6 @@ function Profile() {
                          </Box>
                          :
                          <Box className="bg-blue-color w-screen h-screen overflow-hidden">
-                              {/* <SwipeableTemporaryDrawer /> */}
                               <Header />
                               <Box className="bg-white h-screen w-1/2 float-right px-5 max-sm:w-11/12" style={{ borderRadius: "70px 0 0 70px" }}>
                                    <Typography variant="h4" marginTop={5} className="text-center font-bold text-2xl mt-32">Profile</Typography>
@@ -140,7 +134,7 @@ function Profile() {
                               <MiniDrawer />
                          </Box>
                }
-               <SnackbarAlert open={open} message={message} severity={type} onClose={() => setOpen(false)} />
+               <SnackbarAlert open={openSnackBar} message={message} severity={type} onClose={() => setOpenSnackBar(false)} />
           </>
      );
 }

@@ -1,5 +1,4 @@
 import { Box, CircularProgress, TextField, Typography } from "@mui/material";
-import MiniDrawer from "../../components/Drawer";
 import { useContext, useState } from "react";
 import Image1 from '../../images/forgot_password/image1.png';
 import Image2 from '../../images/forgot_password/image2.png';
@@ -8,37 +7,33 @@ import SnackbarAlert from "../../components/SnackBar";
 import Fetch from "../../services/Fetch";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
+import useSnackBar from "../../hooks/UseSnackBar";
+import { useWaits } from "../../hooks/UseWait";
+import { buildUpdatePasswordFormData } from "../../helper/UpdatePasswordFormData";
 
 function UpdatePassword() {
      const host = `${process.env.REACT_APP_LOCAL_HOST}`;
-     const [sendWait, setSendWait] = useState(false);
      const { wait } = useContext(AuthContext);
+     const { openSnackBar, type, message, setSnackBar, setOpenSnackBar } = useSnackBar();
+     const {sendWait, setSendWait} = useWaits();
      const [password, setPassword] = useState('');
      const [newPassword, setNewPassword] = useState('');
      const [confirmPassword, setConfirmPassword] = useState('');
-     const [message, setMessage] = useState('');
-     const [type, setType] = useState('');
-     const [open, setOpen] = useState(false);
      const navigate = useNavigate();
-
-     function setSnackBar(type, message){
-          setOpen(true);
-          setType(type);
-          setMessage(message);
-     }
 
      const updatePassword = async () => {
           setSendWait(true);
 
-          const formData = new FormData();
-          formData.append('old_password',password);
-          formData.append('new_password',newPassword);
-          formData.append('new_password_confirmation',confirmPassword);
+          const formData = new buildUpdatePasswordFormData({
+               oldPassword: password,
+               newPassword: newPassword,
+               confirmPassword: confirmPassword,
+          });
 
           let result = await Fetch(host + '/account/update-password', "POST", formData);
-          if(result.status == 200){
+          if (result.status == 200) {
                navigate('/profile');
-          }else if(result.status == 422){
+          } else if (result.status == 422) {
                setSnackBar("error", result.data.errors[0]);
           }
 
@@ -54,7 +49,6 @@ function UpdatePassword() {
                          </Box>
                          :
                          <Box className="bg-blue-color w-screen h-screen overflow-hidden">
-                              {/* <MiniDrawer /> */}
                               <Header />
 
                               <Box className="bg-white h-screen w-1/2 float-right max-sm:w-11/12" style={{ borderRadius: "70px 0 0 70px" }}>
@@ -85,7 +79,7 @@ function UpdatePassword() {
                          </Box>
 
                }
-               <SnackbarAlert open={open} message={message} severity={type} onClose={() => setOpen(false)} />
+               <SnackbarAlert open={openSnackBar} message={message} severity={type} onClose={() => setOpenSnackBar(false)} />
           </>
      );
 }

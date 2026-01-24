@@ -1,43 +1,37 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import AuthContext from "../../context/AuthContext";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Fetch from "../../services/Fetch";
-import { Box, Button, CircularProgress, major, TextField } from "@mui/material";
+import { Box, Button, CircularProgress, TextField } from "@mui/material";
 import Header from "../../components/Header";
 import { AsyncPaginate } from "react-select-async-paginate";
 import MultipleSelectChip from "../../components/MultiSelect";
 import SnackbarAlert from "../../components/SnackBar";
 import Image1 from '../../images/courses/image1.jpg';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import useSnackBar from "../../hooks/UseSnackBar";
+import { useWaits } from "../../hooks/UseWait";
+import { buildCourseFormData } from "../../helper/CourseFormData";
 
 function UpdateCourse() {
      const host = `${process.env.REACT_APP_LOCAL_HOST}`;
-     const { wait } = useContext(AuthContext);
-     const [message, setMessage] = useState('');
-     const [type, setType] = useState('');
-     const [open, setOpen] = useState(false);
-     const [getWait, setGetWait] = useState(true);
-     const [sendWait, setSendWait] = useState(false);
-     const [option, setOption] = useState('');
      const language = localStorage.getItem('language');
+     const { wait } = useContext(AuthContext);
+     const { openSnackBar, type, message, setSnackBar, setOpenSnackBar } = useSnackBar();
+     const { getWait, setGetWait, sendWait, setSendWait } = useWaits();
+     const [option, setOption] = useState('');
      const [course, setCourse] = useState('');
+     const [image, setImage] = useState('');
+     const [categoryId, setCategoryId] = useState('');
      const [majors, setMajors] = useState([]);
      const [categories, setCategories] = useState([]);
      const [selectedMajors, setSelectedMajors] = useState([]);
-     const [image, setImage] = useState('');
      const nameEnRef = useRef();
      const nameArRef = useRef();
      const descriptionEnRef = useRef();
      const descriptionArRef = useRef();
-     const [categoryId, setCategoryId] = useState('');
-     const navigate = useNavigate();
+     const priceRef = useRef();
      const param = useParams();
-
-     function setSnackBar(type, message) {
-          setOpen(true);
-          setType(type);
-          setMessage(message);
-     }
 
      function viewImage(event) {
           const previewImage = document.getElementById('image');
@@ -96,20 +90,22 @@ function UpdateCourse() {
      const updateCourse = async () => {
           setSendWait(true);
 
-          const formData = new FormData();
-          formData.append('name_en', nameEnRef.current.value);
-          formData.append('name_ar', nameArRef.current.value);
-          formData.append('description_en', descriptionEnRef.current.value);
-          formData.append('description_ar', descriptionArRef.current.value);
-          formData.append('image', image);
-          formData.append('category_id', categoryId);
-          selectedMajors.forEach((id) => { formData.append('major_ids[]', id); });
-
+          const formData = buildCourseFormData({
+               nameEn: nameEnRef.current.value,
+               nameAr: nameArRef.current.value,
+               descriptionEn: descriptionEnRef.current.value,
+               descriptionAr: descriptionArRef.current.value,
+               price: priceRef.current.value,
+               image: image,
+               categoryId: categoryId,
+               majors: selectedMajors
+          });
+          
           let result = await Fetch(host + `/teacher/courses/${param.id}/update`, 'POST', formData);
 
-          if(result.status == 200){
+          if (result.status == 200) {
                setSnackBar('success', 'Updated Successfully');
-          }else if(result.status == 422){
+          } else if (result.status == 422) {
                setSnackBar('error', result.data.errors[0]);
           }
 
@@ -197,6 +193,8 @@ function UpdateCourse() {
                                                   <MultipleSelectChip selected={selectedMajors} title="Majors" data={majors} onChange={(value) => setSelectedMajors(value)} />
                                              </Box>
                                              <Box className='py-2'></Box>
+                                             <TextField type='number' inputRef={priceRef} defaultValue={course.price} className="w-4/5" id="standard-basic" label="Price" variant="standard" slotProps={{ htmlInput: { 'className': 'py-5' } }} />
+                                             <Box className='py-2'></Box>
                                              <Button onClick={updateCourse} variant="contained">
                                                   {
                                                        sendWait ?
@@ -210,7 +208,7 @@ function UpdateCourse() {
                               </Box>
                          </Box>
                }
-               <SnackbarAlert open={open} message={message} severity={type} onClose={() => setOpen(false)} />
+               <SnackbarAlert open={openSnackBar} message={message} severity={type} onClose={() => setOpenSnackBar(false)} />
           </>
      );
 }

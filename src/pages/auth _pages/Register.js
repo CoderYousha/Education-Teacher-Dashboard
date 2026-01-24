@@ -11,13 +11,15 @@ import Fetch from "../../services/Fetch";
 import dayjs from "dayjs";
 import SnackbarAlert from "../../components/SnackBar";
 import AuthContext from "../../context/AuthContext";
+import useSnackBar from "../../hooks/UseSnackBar";
+import { useWaits } from "../../hooks/UseWait";
+import { buildRegisterFormData } from "../../helper/RegisterFormData";
 
 function Register() {
      const host = `${process.env.REACT_APP_LOCAL_HOST}`;
-     const navigate = useNavigate();
-     const [message, setMessage] = useState('');
-     const [type, setType] = useState('');
-     const [open, setOpen] = useState(false);
+     const { wait } = useContext(AuthContext);
+     const { openSnackBar, type, message, setSnackBar, setOpenSnackBar } = useSnackBar();
+     const {sendWait, setSendWait} = useWaits();
      const [firstName, setFirstName] = useState('');
      const [lastName, setLastName] = useState('');
      const [email, setEmail] = useState('');
@@ -26,14 +28,7 @@ function Register() {
      const [birthDate, setBirthDate] = useState('');
      const [password, setPassword] = useState('');
      const [passwordConfirmation, setPasswordConfirmation] = useState('');
-     const [sendWait, setSendWait] = useState(false);
-     const { wait } = useContext(AuthContext);
-
-     function setSnackBar(type, message) {
-          setOpen(true);
-          setType(type);
-          setMessage(message);
-     }
+     const navigate = useNavigate();
 
      const handleChange = (value, country, e, formattedValue) => {
           console.log("Full value:", value);
@@ -50,16 +45,17 @@ function Register() {
      const register = async () => {
           setSendWait(true);
 
-          const formData = new FormData();
-          formData.append('first_name', firstName);
-          formData.append('last_name', lastName);
-          formData.append('phone_code', phoneCode);
-          formData.append('phone', phoneNumber);
-          formData.append('birth_date', birthDate);
-          formData.append('email', email);
-          formData.append('password', password);
-          formData.append('password_confirmation', passwordConfirmation);
-          formData.append('account_role', 'teacher');
+          const formData = buildRegisterFormData({
+               firstName: firstName,
+               lastName: lastName,
+               phoneCode: phoneCode,
+               phoneNumber: phoneNumber,
+               birthDate: birthDate,
+               email: email,
+               password: password,
+               passwordConfirmation: passwordConfirmation,
+               accountRole: "teacher"
+          });
 
           let result = await Fetch(host + '/register', 'POST', formData);
 
@@ -121,7 +117,7 @@ function Register() {
                               <Box className="w-1/2 h-screen float-left relative">
                                    <img src={Image1} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-sm:hidden" />
                               </Box>
-                              <SnackbarAlert open={open} message={message} severity={type} onClose={() => setOpen(false)} />
+                              <SnackbarAlert open={openSnackBar} message={message} severity={type} onClose={() => setOpenSnackBar(false)} />
                          </Box>
 
                }
