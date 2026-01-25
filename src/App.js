@@ -11,6 +11,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import ExamRoutes from './routes/ExamRoutes';
 import QuestionRoutes from './routes/QuestionRoutes';
 import OptionRoutes from './routes/OptionRoutes';
+import FileRoutes from './routes/FileRoutes';
 
 // const darkTheme = createTheme({
 //   palette: {
@@ -60,6 +61,11 @@ function App() {
               }
               {
                 OptionRoutes().map((route, index) =>
+                  <Route key={index} path={route.path} element={<AuthProvider role="teacher">{route.element}</AuthProvider>} />
+                )
+              }
+              {
+                FileRoutes().map((route, index) =>
                   <Route key={index} path={route.path} element={<AuthProvider role="teacher">{route.element}</AuthProvider>} />
                 )
               }

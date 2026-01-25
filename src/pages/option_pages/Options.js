@@ -35,7 +35,16 @@ function Options() {
      const deleteOption = async () => {
           setSendWait(true);
 
-
+          let result = await Fetch(host + `/teacher/courses/exams/questions/options/${optionId}/delete`, 'DELETE');
+          
+          if(result.status == 200){
+               setQuestion(prevQuestion => ({
+                    ...prevQuestion,
+                    options: prevQuestion.options.filter((item) => item.id !== optionId)
+               }));
+               setSnackBar('success', 'Deleted Successfully');
+               setOpen(false);
+          }
 
           setSendWait(false);
      }
@@ -74,8 +83,8 @@ function Options() {
                                                        </Typography>
                                                   </CardContent>
                                                   <CardActions>
-                                                       <Button size="small">Update</Button>
-                                                       <Button size="small" color="error" onClick={() => { setOptionId(question.id); setDialog('Delete Option', 'Are you sure that you want to delete this option?', deleteOption) }}>Delete</Button>
+                                                       <Button onClick={() => navigate(`/courses/${param.course_id}/exams/${param.exam_id}/questions/${param.question_id}/update-option/${option.id}`)} size="small">Update</Button>
+                                                       <Button size="small" color="error" onClick={() => { setOptionId(option.id); setDialog('Delete Option', 'Are you sure that you want to delete this option?', deleteOption) }}>Delete</Button>
                                                   </CardActions>
                                              </Card>
 

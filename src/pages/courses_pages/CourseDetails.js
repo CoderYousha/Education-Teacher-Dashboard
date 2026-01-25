@@ -31,7 +31,7 @@ function CourseDetails() {
 
      const actions = [
           { icon: <AddTaskIcon />, name: 'Add Exam', path: `/${param.id}/create-exam` },
-          { icon: <QueuePlayNextIcon />, name: 'Add Course' },
+          { icon: <QueuePlayNextIcon />, name: 'Add Video', path: `/course-details/${param.id}/add-file` },
      ];
 
      const getCourse = async () => {
@@ -98,7 +98,7 @@ function CourseDetails() {
                                         <Box key={index} className="w-1/2 h-fit mx-auto mt-12">
                                              <ReactPlayer src="http://72.60.32.52:84/storage/files/courses/2/syntax.mp4" controls={true}
                                                   width="100%"
-                                                  height="100%" />
+                                                  height="100%"/>
                                              <Typography className="text-white" variant="h4">{language == 'en' ? content.content.name_en : content.content.name_ar}</Typography>
                                         </Box>
                                    )

@@ -88,7 +88,7 @@ function Questions() {
                                                        </Typography>
                                                   </CardContent>
                                                   <CardActions>
-                                                       <Button size="small" onClick={() => alert(question.id)}>Options</Button>
+                                                       <Button size="small" onClick={() => navigate(`/courses/${param.course_id}/exams/${param.exam_id}/questions/${question.id}/options`)}>Options</Button>
                                                        <Button size="small" onClick={() => navigate(`/courses/${param.course_id}}/exams/${param.exam_id}/update-question/${question.id}`)}>Update</Button>
                                                        <Button size="small" color="error" onClick={() => { setQuestionId(question.id); setDialog('Delete Exam', 'Are you sure that you want to delete this question?', deleteQuestion) }}>Delete</Button>
                                                   </CardActions>
