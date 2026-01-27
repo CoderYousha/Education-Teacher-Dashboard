@@ -21,10 +21,15 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import PlayLessonIcon from '@mui/icons-material/PlayLesson';
 import { Collapse } from '@mui/material';
 import AddBoxIcon from '@mui/icons-material/AddBox';
+import FeaturedPlayListIcon from '@mui/icons-material/FeaturedPlayList';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 
 
 export default function SwipeableTemporaryDrawer() {
      const host = `${process.env.REACT_APP_LOCAL_HOST}`;
+     const [openCourses, setOpenCourses] = React.useState(false);
+     const [openPaths, setOpenPaths] = React.useState(false);
      const navigate = useNavigate();
 
      const logout = async () => {
@@ -37,9 +42,12 @@ export default function SwipeableTemporaryDrawer() {
           }
      }
 
-     const [openCourses, setOpenCourses] = React.useState(false);
      const handleCoursesClick = () => {
           setOpenCourses(!openCourses);
+     };
+
+     const handlePathsClick = () => {
+          setOpenPaths(!openPaths);
      };
 
      const items1 = [
@@ -64,6 +72,18 @@ export default function SwipeableTemporaryDrawer() {
                "text": "Create Course",
                "icon": <AddBoxIcon />,
                "path": "/create-course"
+          },
+     ];
+     const items3 = [
+          {
+               "text": "My Paths",
+               "icon": <PlaylistAddCheckIcon />,
+               "path": "/my-paths"
+          },
+          {
+               "text": "Create Path",
+               "icon": <PlaylistAddIcon />,
+               "path": "/create-path"
           },
      ];
 
@@ -112,14 +132,7 @@ export default function SwipeableTemporaryDrawer() {
                </List>
                <Divider />
                <List>
-                    <ListItem disablePadding>
-                         <ListItemButton onClick={logout}>
-                              <ListItemIcon>
-                                   <LogoutIcon />
-                              </ListItemIcon>
-                              <ListItemText primary="Logout" />
-                         </ListItemButton>
-                    </ListItem>
+
                     <ListItemButton onClick={handleCoursesClick}>
                          <ListItemIcon>
                               <InboxIcon />
@@ -127,7 +140,6 @@ export default function SwipeableTemporaryDrawer() {
                          <ListItemText primary="Courses" />
                          {openCourses ? <ExpandLess /> : <ExpandMore />}
                     </ListItemButton>
-                    {/* القائمة الفرعية */}
                     <Collapse in={openCourses} timeout="auto" unmountOnExit>
                          <List component="div" disablePadding>
                               {
@@ -143,6 +155,39 @@ export default function SwipeableTemporaryDrawer() {
 
                          </List>
                     </Collapse>
+                    <ListItemButton onClick={handlePathsClick}>
+                         <ListItemIcon>
+                              <FeaturedPlayListIcon />
+                         </ListItemIcon>
+                         <ListItemText primary="Paths" />
+                         {openPaths ? <ExpandLess /> : <ExpandMore />}
+                    </ListItemButton>
+                    <Collapse in={openPaths} timeout="auto" unmountOnExit>
+                         <List component="div" disablePadding>
+                              {
+                                   items3.map((item, index) =>
+                                        <ListItemButton key={index} onClick={() => navigate(item.path)} sx={{ pl: 4 }}>
+                                             <ListItemIcon>
+                                                  {item.icon}
+                                             </ListItemIcon>
+                                             <ListItemText primary={item.text} />
+                                        </ListItemButton>
+                                   )
+                              }
+
+                         </List>
+                    </Collapse>
+               </List>
+               <Divider />
+               <List>
+                    <ListItem disablePadding>
+                         <ListItemButton onClick={logout}>
+                              <ListItemIcon>
+                                   <LogoutIcon />
+                              </ListItemIcon>
+                              <ListItemText primary="Logout" />
+                         </ListItemButton>
+                    </ListItem>
                </List>
           </Box>
      );

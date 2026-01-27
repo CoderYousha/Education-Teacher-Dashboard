@@ -14,6 +14,8 @@ import SnackbarAlert from "../../components/SnackBar";
 import { useDialog } from "../../hooks/UseDialog";
 import useSnackBar from "../../hooks/UseSnackBar";
 import { useWaits } from "../../hooks/UseWait";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 function CourseDetails() {
@@ -22,10 +24,10 @@ function CourseDetails() {
      const { wait } = useContext(AuthContext);
      const { open, title, description, setDialog, setOpen } = useDialog();
      const { openSnackBar, type, message, setSnackBar, setOpenSnackBar } = useSnackBar();
-     const {getWait, setGetWait, sendWait, setSendWait} = useWaits();
+     const { getWait, setGetWait, sendWait, setSendWait } = useWaits();
      const [value, setValue] = useState(parseInt(sessionStorage.getItem('content-window'), 10));
      const [course, setCourse] = useState('');
-     const [examId, setExamId] = useState('');
+     const [contentId, setContentId] = useState('');
      const navigate = useNavigate();
      const param = useParams();
 
@@ -46,16 +48,34 @@ function CourseDetails() {
      const deleteExam = async () => {
           setSendWait(true);
 
-          let result = await Fetch(host + `/teacher/courses/exams/${examId}/delete`, 'DELETE', null);
+          let result = await Fetch(host + `/teacher/courses/exams/${contentId}/delete`, 'DELETE', null);
 
           if (result.status == 200) {
                setCourse(prevCourse => ({
                     ...prevCourse,
-                    contents: prevCourse.contents.filter((item) => item.content.id !== examId)
+                    contents: prevCourse.contents.filter((item) => item.content.id !== contentId)
                }));
                setOpen(false);
                setSnackBar('success', 'Deleted Successfully');
-               setExamId(null);
+               setContentId(null);
+          }
+
+          setSendWait(false);
+     }
+
+     const deleteFile = async () => {
+          setSendWait(true);
+
+          let result = await Fetch(host + `/teacher/courses/files/${contentId}/delete`, 'DELETE', null);
+
+          if (result.status == 200) {
+               setCourse(prevCourse => ({
+                    ...prevCourse,
+                    contents: prevCourse.contents.filter((item) => item.content.id !== contentId)
+               }));
+               setOpen(false);
+               setSnackBar('success', 'Deleted Successfully');
+               setContentId(null);
           }
 
           setSendWait(false);
@@ -63,7 +83,7 @@ function CourseDetails() {
 
      useEffect(() => {
           getCourse();
-     }, [course]);
+     }, []);
 
      return (
           <>
@@ -73,7 +93,7 @@ function CourseDetails() {
                               <CircularProgress size={70} />
                          </Box>
                          :
-                         <Box className="bg-blue-color w-screen h-screen overflow-scroll pb-10 none-view-scroll">
+                         <Box className="bg-blue-color w-screen h-screen overflow-scroll pb-20 none-view-scroll">
                               <Header />
                               <Box className="text-center pt-10 text-white">
                                    <Typography fontWeight={800} variant="h1">{value == 0 ? "Videos" : "Exams"}</Typography>
@@ -95,10 +115,14 @@ function CourseDetails() {
                                    value == 0 &&
                                    course.contents.map((content, index) =>
                                         content.content_type == "CourseFile" &&
-                                        <Box key={index} className="w-1/2 h-fit mx-auto mt-12">
-                                             <ReactPlayer src="http://72.60.32.52:84/storage/files/courses/2/syntax.mp4" controls={true}
+                                        <Box key={index} className="w-1/2 h-fit mx-auto mt-12 relative">
+                                             <Box className="absolute top-4 right-4 z-50">
+                                                  <DeleteIcon onClick={() => { setContentId(content.content.id); setDialog('Delete Exam', 'Are you sure that you want to delete this exam?') }} className="cursor-pointer text-red-600" />
+                                                  <EditIcon onClick = {() => navigate(`update_file/${content.content.id}`)} className="cursor-pointer text-green-600 ml-5" />
+                                             </Box>
+                                             <ReactPlayer src={content.content.file_url} controls={true}
                                                   width="100%"
-                                                  height="100%"/>
+                                                  height="100%" />
                                              <Typography className="text-white" variant="h4">{language == 'en' ? content.content.name_en : content.content.name_ar}</Typography>
                                         </Box>
                                    )
@@ -125,7 +149,7 @@ function CourseDetails() {
                                                        <CardActions>
                                                             <Button size="small" onClick={() => navigate(`/courses/${course.id}/exams/${content.content.id}/questions`)}>Questions</Button>
                                                             <Button size="small" onClick={() => navigate(`/course/${param.id}/update-exam/${content.content.id}`)}>Update</Button>
-                                                            <Button size="small" color="error" onClick={() => { setExamId(content.content.id); setDialog('Delete Exam', 'Are you sure that you want to delete this exam?', deleteExam) }}>Delete</Button>
+                                                            <Button size="small" color="error" onClick={() => { setContentId(content.content.id); setDialog('Delete Exam', 'Are you sure that you want to delete this exam?') }}>Delete</Button>
                                                        </CardActions>
                                                   </Card>
 
@@ -151,7 +175,7 @@ function CourseDetails() {
                                         />
                                    ))}
                               </SpeedDial>
-                              <AlertDialog title={title} description={description} onCancel={() => setOpen(false)} onConfirm={() => { value == 1 ? deleteExam() : deleteExam(); }} wait={sendWait} openDialog={open} />
+                              <AlertDialog title={title} description={description} onCancel={() => setOpen(false)} onConfirm={() => { value == 1 ? deleteExam() : deleteFile(); }} wait={sendWait} openDialog={open} />
                          </Box>
                }
                <SnackbarAlert open={openSnackBar} message={message} severity={type} onClose={() => setOpenSnackBar(false)} />

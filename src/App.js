@@ -12,6 +12,7 @@ import ExamRoutes from './routes/ExamRoutes';
 import QuestionRoutes from './routes/QuestionRoutes';
 import OptionRoutes from './routes/OptionRoutes';
 import FileRoutes from './routes/FileRoutes';
+import PathRoutes from './routes/PathRoutes';
 
 // const darkTheme = createTheme({
 //   palette: {
@@ -66,6 +67,11 @@ function App() {
               }
               {
                 FileRoutes().map((route, index) =>
+                  <Route key={index} path={route.path} element={<AuthProvider role="teacher">{route.element}</AuthProvider>} />
+                )
+              }
+              {
+                PathRoutes().map((route, index) =>
                   <Route key={index} path={route.path} element={<AuthProvider role="teacher">{route.element}</AuthProvider>} />
                 )
               }
