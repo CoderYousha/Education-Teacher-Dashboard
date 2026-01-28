@@ -49,8 +49,8 @@ function Login() {
                               <CircularProgress size={70} />
                          </Box>
                          :
-                         <Box className="bg-blue-color w-screen h-screen overflow-auto">
-                              <Box sx={{ bgcolor: 'background.paper' }} className="h-screen w-1/2 float-right max-sm:w-11/12" style={{ borderRadius: "70px 0 0 70px" }}>
+                         <Box sx={{backgroundColor: (theme) => theme.palette.mode === 'dark' ? theme.palette.background.default : '#457b9d'}} className="bg-blue-color w-screen h-screen overflow-auto">
+                              <Box sx={{ bgcolor: 'background.paper', boxShadow: 5 }} className="h-screen w-1/2 float-right max-sm:w-11/12" style={{ borderRadius: "70px 0 0 70px" }}>
                                    <Typography marginTop={10} variant="h5" className="text-center font-bold text-2xl mt-32">
                                         Sign In
                                    </Typography>

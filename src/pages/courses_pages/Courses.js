@@ -83,7 +83,7 @@ function Courses() {
                               <CircularProgress size={70} />
                          </Box>
                          :
-                         <Box className="bg-blue-color w-screen h-screen overflow-x-hidden relative none-view-scroll">
+                         <Box sx={{backgroundColor: (theme) => theme.palette.mode === 'dark' ? theme.palette.background.default : '#457b9d'}} className="bg-blue-color w-screen h-screen overflow-x-hidden relative none-view-scroll">
                               <CoursesHeader onClick={(value) => setSearch(value)} onChange={(value) => setCategoryId(value)} selected={categoryId} data={categories} />
                               <Box className="w-full absolute right-0 mt-44 grid grid-cols-3 gap-y-5 max-sm:grid-cols-1 justify-items-center">
                                    {

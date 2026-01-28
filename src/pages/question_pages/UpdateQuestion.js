@@ -4,7 +4,7 @@ import useSnackBar from "../../hooks/UseSnackBar";
 import { useWaits } from "../../hooks/UseWait";
 import { Box, Button, CircularProgress, TextField } from "@mui/material";
 import Header from "../../components/Header";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Image1 from '../../images/questions/image1.png';
 import SnackbarAlert from "../../components/SnackBar";
 import BasicSelect from "../../components/Select";
@@ -65,9 +65,9 @@ function UpdateQuestion() {
                               <CircularProgress size={70} />
                          </Box>
                          :
-                         <Box className="bg-blue-color w-screen h-screen overflow-hidden">
+                         <Box sx={{backgroundColor: (theme) => theme.palette.mode === 'dark' ? theme.palette.background.default : '#457b9d'}} className="bg-blue-color w-screen h-screen overflow-hidden">
                               <Header />
-                              <Box className="w-4/5 h-5/6 rounded-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white max-sm:h-fit">
+                              <Box sx={{backgroundColor: (theme) => theme.palette.mode === 'dark' ? theme.palette.background.default : 'white', boxShadow: 5}} className="w-4/5 h-5/6 rounded-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white max-sm:h-fit">
                                    <Box className='h-full float-left w-1/2 max-sm:hidden'>
                                         <img src={Image1} className='w-1/2 rounded-xl absolute top-1/2 -translate-y-1/2' />
                                    </Box>

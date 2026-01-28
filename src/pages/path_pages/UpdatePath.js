@@ -8,7 +8,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import AuthContext from "../../context/AuthContext";
 import Image1 from '../../images/paths/image1.png';
 import Fetch from "../../services/Fetch";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import MultipleSelectChip from "../../components/MultiSelect";
 import useSnackBar from "../../hooks/UseSnackBar";
 import { buildPathFormData } from "../../helper/PathFormData";
@@ -134,9 +134,9 @@ function UpdatePath() {
                               <CircularProgress size={70} />
                          </Box>
                          :
-                         <Box className="bg-blue-color w-screen h-screen overflow-hidden max-sm:min-h-full">
+                         <Box sx={{backgroundColor: (theme) => theme.palette.mode === 'dark' ? theme.palette.background.default : '#457b9d'}} className="bg-blue-color w-screen h-screen overflow-hidden max-sm:min-h-full">
                               <Header />
-                              <Box className="w-4/5 h-5/6 rounded-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white">
+                              <Box sx={{backgroundColor: (theme) => theme.palette.mode === 'dark' ? theme.palette.background.default : 'white', boxShadow: 5}} className="w-4/5 h-5/6 rounded-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white">
                                    <Box className='h-full float-left w-1/2 max-sm:hidden'>
                                         <img src={Image1} className='w-1/2 rounded-xl absolute top-1/2 -translate-y-1/2' />
                                    </Box>

@@ -7,7 +7,7 @@ import Header from "../../components/Header";
 import { AsyncPaginate } from "react-select-async-paginate";
 import MultipleSelectChip from "../../components/MultiSelect";
 import SnackbarAlert from "../../components/SnackBar";
-import Image1 from '../../images/courses/image1.jpg';
+import Image1 from '../../images/courses/image1.png';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import useSnackBar from "../../hooks/UseSnackBar";
 import { useWaits } from "../../hooks/UseWait";
@@ -135,9 +135,9 @@ function UpdateCourse() {
                               <CircularProgress size={70} />
                          </Box>
                          :
-                         <Box className="bg-blue-color w-screen h-screen overflow-hidden">
+                         <Box sx={{backgroundColor: (theme) => theme.palette.mode === 'dark' ? theme.palette.background.default : '#457b9d'}} className="bg-blue-color w-screen h-screen overflow-hidden">
                               <Header />
-                              <Box className="w-4/5 h-5/6 rounded-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white">
+                              <Box sx={{backgroundColor: (theme) => theme.palette.mode === 'dark' ? theme.palette.background.default : 'white', boxShadow: 5}} className="w-4/5 h-5/6 rounded-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white">
                                    <Box className='h-full float-left w-1/2'>
                                         <img src={Image1} className='w-1/2 rounded-xl absolute top-1/2 -translate-y-1/2' />
                                    </Box>
@@ -177,7 +177,7 @@ function UpdateCourse() {
                                              <Box className='py-3'></Box>
                                              <Box className='w-4/5'>
                                                   <AsyncPaginate
-                                                       className='z-50'
+                                                       className='z-50 text-black'
                                                        value={option}
                                                        loadOptions={loadOptions}
                                                        onChange={option => {

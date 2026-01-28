@@ -3,9 +3,7 @@ import AuthContext from "../../context/AuthContext";
 import { Box, Button, Card, CardActions, CardContent, CardMedia, CircularProgress, Typography } from "@mui/material";
 import Fetch from "../../services/Fetch";
 import { useNavigate, useParams } from "react-router-dom";
-import AlertDialog from "../../components/DialogView";
 import SnackbarAlert from "../../components/SnackBar";
-import { useDialog } from "../../hooks/UseDialog";
 import useSnackBar from "../../hooks/UseSnackBar";
 import { useWaits } from "../../hooks/UseWait";
 import Header from "../../components/Header";
@@ -14,11 +12,8 @@ function PathDetails() {
      const host = `${process.env.REACT_APP_LOCAL_HOST}`;
      const language = localStorage.getItem('language');
      const { wait } = useContext(AuthContext);
-     const { open, title, description, setDialog, setOpen } = useDialog();
      const { openSnackBar, type, message, setSnackBar, setOpenSnackBar } = useSnackBar();
      const { getWait, setGetWait, sendWait, setSendWait } = useWaits();
-     const [courses, setCourses] = useState([]);
-     const [courseId, setCourseId] = useState('');
      const [path, setPath] = useState();
      const navigate = useNavigate();
      const param = useParams();
@@ -45,7 +40,7 @@ function PathDetails() {
                               <CircularProgress size={70} />
                          </Box>
                          :
-                         <Box className="bg-blue-color w-screen h-screen overflow-x-hidden relative none-view-scroll">
+                         <Box sx={{backgroundColor: (theme) => theme.palette.mode === 'dark' ? theme.palette.background.default : '#457b9d'}} className="bg-blue-color w-screen h-screen overflow-x-hidden relative none-view-scroll">
                               <Header />
                               <Box className="w-full absolute right-0 mt-44 grid grid-cols-3 gap-y-5 max-sm:grid-cols-1 justify-items-center">
                                    {

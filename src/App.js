@@ -13,23 +13,34 @@ import QuestionRoutes from './routes/QuestionRoutes';
 import OptionRoutes from './routes/OptionRoutes';
 import FileRoutes from './routes/FileRoutes';
 import PathRoutes from './routes/PathRoutes';
+import { useMemo, useState } from 'react';
+import DarkModeToggle from './components/DarkModeToggle';
 
-// const darkTheme = createTheme({
-//   palette: {
-//     mode: 'dark',
-//   },
-// });
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
 
-// const lightTheme = createTheme({
-//   palette: {
-//     mode: 'light',
-//   },
-// });
+const lightTheme = createTheme({
+  palette: {
+    mode: 'light',
+  },
+});
 
 function App() {
+  const [mode, setMode] = useState(localStorage.getItem('theme') || 'light'); 
+  const toggleColorMode = () => { 
+    setMode((prev) => (prev === "light" ? "dark" : "light")); 
+    localStorage.setItem('theme', mode === "light" ? "dark" : "light");
+  };
+  const theme = useMemo( () => createTheme({ palette: { mode, }, }), [mode] );
   return (
-    // <ThemeProvider theme={lightTheme}>
-    //   <CssBaseline />
+    <ThemeProvider theme={theme}>
+      <div style={{ padding: 0 }}>
+        <DarkModeToggle toggleColorMode={toggleColorMode} />
+      </div>
+      <CssBaseline />
       <main>
       <div className="App">
         <BrowserRouter>
@@ -80,7 +91,7 @@ function App() {
       </div>
 
       </main>
-    // </ThemeProvider>
+    </ThemeProvider>
   );
 }
 

@@ -93,16 +93,16 @@ function Profile() {
                               <CircularProgress size={70} />
                          </Box>
                          :
-                         <Box className="bg-blue-color w-screen h-screen overflow-hidden">
+                         <Box sx={{backgroundColor: (theme) => theme.palette.mode === 'dark' ? theme.palette.background.default : '#457b9d'}} className="bg-blue-color w-screen h-screen overflow-hidden">
                               <Header />
-                              <Box className="bg-white h-screen w-1/2 float-right px-5 max-sm:w-11/12" style={{ borderRadius: "70px 0 0 70px" }}>
+                              <Box sx={{backgroundColor: (theme) => theme.palette.mode === 'dark' ? theme.palette.background.default : theme.palette.background.paper, boxShadow: 5}} className="h-screen w-1/2 float-right px-5 max-sm:w-11/12" style={{ borderRadius: "70px 0 0 70px", boxShadow: "0 2px 10px rgba(0,0,0,0.2) !important" }}>
                                    <Typography variant="h4" marginTop={5} className="text-center font-bold text-2xl mt-32">Profile</Typography>
                                    <Box className="flex justify-between mx-auto mt-10">
                                         <TextField inputRef={firstNameRef} defaultValue={profile.first_name} className="w-2/5" id="standard-basic" label="First Name" variant="standard" slotProps={{ htmlInput: { 'className': 'py-5' } }} />
                                         <TextField inputRef={lastNameRef} defaultValue={profile.last_name} className="w-2/5" id="standard-basic" label="Last Name" variant="standard" />
                                    </Box>
                                    <Box className="flex justify-between mx-auto mt-10 items-center">
-                                        <PhoneInput value={profile.phone_code + profile.phone} containerStyle={{ width: "40%" }} inputStyle={{ width: '100%' }} onChange={handleChange} />
+                                        <PhoneInput inputClass="text-black py-6" value={profile.phone_code + profile.phone} containerStyle={{ width: "40%" }} inputStyle={{ width: '100%' }} onChange={handleChange} />
                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                              <DatePicker className="w-2/5"
                                                   label="Birth Date"

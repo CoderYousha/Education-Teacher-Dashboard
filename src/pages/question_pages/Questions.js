@@ -62,7 +62,7 @@ function Questions() {
                               <CircularProgress size={70} />
                          </Box>
                          :
-                         <Box className="bg-blue-color w-screen h-screen overflow-scroll pb-10 none-view-scroll">
+                         <Box sx={{backgroundColor: (theme) => theme.palette.mode === 'dark' ? theme.palette.background.default : '#457b9d'}} className="bg-blue-color w-screen h-screen overflow-scroll pb-10 none-view-scroll">
                               <Header />
                               <Box className="text-center pt-10 text-white">
                                    <Typography fontWeight={800} variant="h1">Questions</Typography>
